@@ -2,7 +2,7 @@
 layout: post
 title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet Flint 2"
 date: 2026-03-28
-tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel]
+tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel, intermediate]
 ---
 
 Setting up a secure home network with remote access using a [GL.iNet Flint 2](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) router as the central hub, [Tailscale](https://tailscale.com/) (Personal plan, free) for encrypted remote access without port forwarding, and [NordVPN](https://nordvpn.com/) on the router for always-on privacy.
