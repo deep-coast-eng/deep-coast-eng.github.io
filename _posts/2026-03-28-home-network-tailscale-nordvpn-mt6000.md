@@ -2,7 +2,7 @@
 layout: post
 title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet Flint 2"
 date: 2026-03-28
-tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel]
+tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel-7a]
 ---
 
 Setting up a secure home network with remote access using a [GL.iNet Flint 2](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) router as the central hub, [Tailscale](https://tailscale.com/) (free plan) for encrypted remote access without port forwarding, and [NordVPN](https://nordvpn.com/) on the router for always-on privacy.
@@ -33,7 +33,7 @@ This guide was tested with the following, but the setup works with any combinati
 
 - 2x Windows PCs (Windows 10/11 Pro)
 - 1x Android phone (tested on Google Pixel 7a)
-- GL.iNet Flint 2 (GL-MT6000) router
+- GL.iNet Flint 2 (GL-MT6000) router (firmware 4.x.x -- check [GL.iNet's download center](https://dl.gl-inet.com/router/mt6000) for the latest stable release). The admin panel at System > Upgrade will notify you when updates are available. Keep firmware current, but check the [GL.iNet forum](https://forum.gl-inet.com/) for a few days after a new release before updating -- stable releases have occasionally shipped with DNS or VPN regressions.
 
 ---
 
@@ -44,6 +44,7 @@ This guide was tested with the following, but the setup works with any combinati
 1. Go to [https://login.tailscale.com](https://login.tailscale.com).
 2. Sign up using a supported identity provider (Google, Microsoft, GitHub, Apple). There is no standalone username/password option. An IDP account is required.
 3. Your tailnet is permanently tied to the IDP you sign up with. To change it later, you would need to create a new tailnet with a different IDP.
+4. The free plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
 
 ### Install Tailscale on Windows
 
@@ -110,6 +111,27 @@ If "Allow Remote Access LAN" was enabled after the initial bind:
    - Confirm the subnet route (`192.168.8.0/24`) is approved in the Tailscale admin console under your Flint 2's route settings.
    - Confirm Tailscale is enabled and connected on both the router and the phone.
    - Confirm the phone is actually on cellular, not WiFi. If it is on the same LAN, the test proves nothing.
+
+### Enable Exit Node (Optional)
+
+Configuring the Flint 2 as a Tailscale exit node allows remote devices to route all internet traffic through your home network. This is useful when you are on an untrusted network and want the protection of your home router's NordVPN tunnel. See Mode 4 in the Everyday Use section below.
+
+1. In the GL.iNet admin panel, go to **Applications > Tailscale**.
+2. Enable the **Exit Node** toggle.
+3. In the Tailscale admin console, click your Flint 2 in the machine list.
+4. Click **Machine settings > Edit route settings**.
+5. Approve the exit node.
+
+To use it from a remote device, open the Tailscale app and select the Flint 2 as your exit node. All traffic will flow through your home router.
+
+### Disable Key Expiry on the Router
+
+Tailscale node keys expire after 180 days by default. If the router's key expires, it silently drops off the tailnet and subnet routing stops working. You will not get a notification.
+
+1. In the Tailscale admin console, click your Flint 2 in the machine list.
+2. Click **Machine settings > Disable key expiry**.
+
+Do this for any device that needs to stay connected permanently without manual re-authentication.
 
 ---
 
@@ -263,7 +285,3 @@ Once everything is configured, your network operates in several distinct modes d
 - Router admin: `192.168.8.1`
 - Tailscale IPs: `100.x.y.z` (per device, found in admin console)
 - Tailscale admin: [https://login.tailscale.com/admin](https://login.tailscale.com/admin)
-
-### IDP Requirement
-
-Tailscale does not support standalone username/password accounts. All users must authenticate through a supported identity provider (Google, Microsoft, GitHub, Apple, OIDC). Your tailnet identity is tied to the IDP used at signup.
