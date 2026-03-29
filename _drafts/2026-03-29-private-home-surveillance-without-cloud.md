@@ -81,6 +81,16 @@ Once configured, the cameras record locally and send push notifications to your 
 - **No advanced automation.** You cannot trigger actions based on detections (turn on lights, lock doors, send a custom notification) without additional software.
 - **microSD card is a single point of failure.** Cards wear out over time with continuous writes. Check them periodically.
 
+### Offsite Backup (Recommended)
+
+The biggest vulnerability in Tier 1 is that your footage lives on microSD cards inside the cameras. If someone steals or destroys a camera, the recording goes with it. A low-cost mitigation:
+
+1. Configure each camera to write motion-triggered clips to an FTP server or NAS on your LAN. Most Reolink cameras support FTP natively in the app settings.
+2. Use any cheap always-on device on your network as the FTP target -- an old laptop, a Raspberry Pi with an external drive, or a USB drive plugged into the Flint 2 (the router supports basic network storage via its USB port).
+3. Optionally, if you have a trusted friend or family member who also runs Tailscale, you can sync that folder to a machine on their network using a tool like [Syncthing](https://syncthing.net/) over Tailscale. This gives you offsite backup at no cost, fully encrypted, with no cloud provider involved.
+
+This is not required, but it closes the biggest gap in a local-only setup. A Raspberry Pi with a USB drive runs about $60-80 and handles this for any number of cameras.
+
 For many people, Tier 1 is sufficient. If you want better accuracy, a unified event timeline, or automation, continue to Tier 2.
 
 ---
@@ -138,6 +148,16 @@ If you have 1-2 cameras and just want alerts when someone is at the door, Tier 1
 - Face and license plate recognition
 - A system you can expand without hitting a ceiling
 
+### Offsite Backup (Recommended)
+
+Frigate stores recordings on the mini PC's local drive. The same theft/destruction risk applies here, but centralized storage makes backup simpler.
+
+1. Frigate's recording directory can be pointed at any local path. Set it to a dedicated drive or partition.
+2. Use [Syncthing](https://syncthing.net/) to sync the events and clips folder to a remote machine over Tailscale. Syncthing runs on Linux, Windows, macOS, and Docker. It's peer-to-peer, encrypted, and free.
+3. The remote machine can be anything -- a friend or family member's PC on their own Tailscale network, a cheap VPS, or a second machine you keep at a different location.
+
+For most people, syncing only the Frigate events folder (detected clips and snapshots, not 24/7 continuous recording) keeps bandwidth and storage manageable. A typical household generates a few hundred MB to a few GB of event clips per day depending on camera count and activity.
+
 ---
 
 ## Remote Access via Tailscale
@@ -186,6 +206,5 @@ If you are renting short-term or want something you can take with you in a box, 
 
 - **Outdoor wiring and mounting.** Running Ethernet cable to exterior camera locations may require drilling, conduit, and weatherproofing. This varies by home and is outside the scope of this guide.
 - **Doorbell camera setup.** Reolink and Amcrest make PoE doorbells that work with this setup, but the integration is less polished than a dedicated guide would warrant.
-- **Offsite backup.** Syncing footage to a remote machine over Tailscale for redundancy is possible but adds complexity. This may be covered in a future guide.
 
 **Disclaimer:** This guide documents a working configuration based on the author's own testing. It is not endorsed by or affiliated with Reolink, Frigate, or Home Assistant. Camera placement and surveillance may be subject to local laws regarding recording in public or shared spaces. Check your local regulations before installing exterior cameras.
