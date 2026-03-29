@@ -110,6 +110,10 @@ a:hover {
 .sidebar-posts a {
   font-size: 0.85rem;
   line-height: 1.4;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag-cloud {
