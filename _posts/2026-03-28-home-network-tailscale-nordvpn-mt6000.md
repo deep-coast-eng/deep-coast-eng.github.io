@@ -2,16 +2,16 @@
 layout: post
 title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet Flint 2"
 date: 2026-03-28
-tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel-7a]
+tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel]
 ---
 
-Setting up a secure home network with remote access using a [GL.iNet Flint 2](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) router as the central hub, [Tailscale](https://tailscale.com/) (free plan) for encrypted remote access without port forwarding, and [NordVPN](https://nordvpn.com/) on the router for always-on privacy.
+Setting up a secure home network with remote access using a [GL.iNet Flint 2](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) router as the central hub, [Tailscale](https://tailscale.com/) (Personal plan, free) for encrypted remote access without port forwarding, and [NordVPN](https://nordvpn.com/) on the router for always-on privacy.
 
 ## Why This Guide Exists
 
-Setting up a home network that respects your privacy shouldn't require an IT background or enterprise-grade hardware. Most consumer routers offer little beyond basic connectivity, and ISP-provided equipment -- even when it supports port forwarding -- introduces risk the moment you open an inbound port. Port forwarding creates a direct path from the public internet to a device on your LAN. Automated scanners constantly probe for open ports, and any service behind a forwarded port with weak credentials, unpatched firmware, or known vulnerabilities becomes an entry point for unauthorized access. NAT, which most home routers use by default, blocks unsolicited inbound connections as a side effect of address translation, but it was not designed as a security boundary and should not be treated as one. For the modern general consumer who streams, works remotely, manages smart devices, and wants their internet activity private by default, there is no widely accepted, standardized playbook that avoids these trade-offs.
+Setting up a home network that respects your privacy shouldn't require an IT background or enterprise-grade hardware. Most consumer routers offer little beyond basic connectivity, and ISP-provided equipment, even when it supports port forwarding, introduces risk the moment you open an inbound port. Port forwarding creates a direct path from the public internet to a device on your LAN. Automated scanners constantly probe for open ports, and any service behind a forwarded port with weak credentials, unpatched firmware, or known vulnerabilities becomes an entry point for unauthorized access. NAT, which most home routers use by default, blocks unsolicited inbound connections as a side effect of address translation, but it was not designed as a security boundary and should not be treated as one. For the modern general consumer who streams, works remotely, manages smart devices, and wants their internet activity private by default, there is no widely accepted, standardized playbook that avoids these trade-offs.
 
-This guide addresses that gap. It walks through building a privacy-first home network from scratch using affordable, consumer-accessible tools: the GL.iNet Flint 2 (GL-MT6000), NordVPN, and Tailscale. The Flint 2 ($159.99 at date of publishing) is an excellent fit for this setup. It runs OpenWrt-based firmware with native support for VPN clients and Tailscale, offers Wi-Fi 6 and 2.5G Ethernet, and provides an accessible admin interface that balances power with usability. NordVPN Basic covers always-on encrypted internet traffic and city-switchable streaming at an introductory price of $81.36 for 24 months. Tailscale provides secure remote access to your entire home network at no cost. The free plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
+This guide addresses that gap. It walks through building a privacy-first home network from scratch using affordable, consumer-accessible tools: the GL.iNet Flint 2 (GL-MT6000), NordVPN, and Tailscale. The Flint 2 ($159.99 on the [GL.iNet US store](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) at date of publishing) is an excellent fit for this setup. It runs OpenWrt-based firmware with native support for VPN clients and Tailscale, offers Wi-Fi 6 and 2.5G Ethernet, and provides an accessible admin interface that balances power with usability. NordVPN Basic covers always-on encrypted internet traffic and city-switchable streaming at an introductory price of $81.36 for 24 months. Tailscale provides secure remote access to your entire home network at no cost. The Personal plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
 
 All that is required for this setup are your existing devices (Windows or Linux PCs, Android phone), the free applications listed above, and the GL.iNet Flint 2 (GL-MT6000). No additional hardware, no paid subscriptions beyond NordVPN, and no modifications to your ISP modem. This setup also works with Apple devices -- Tailscale and NordVPN both have native iOS and macOS clients, and the process is effectively the same: install the app, sign in with your identity provider, and the device joins your network. An intermediate user should expect to complete the full setup in approximately 1-2 hours, assuming their devices and tools match the conditions described in this guide.
 
@@ -46,7 +46,7 @@ This guide was tested with the following, but the setup works with any combinati
 1. Go to [https://login.tailscale.com](https://login.tailscale.com).
 2. Sign up using a supported identity provider (Google, Microsoft, GitHub, Apple). There is no standalone username/password option. An IDP account is required.
 3. Your tailnet is permanently tied to the IDP you sign up with. To change it later, you would need to create a new tailnet with a different IDP.
-4. The free plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
+4. The Personal plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
 
 ### Install Tailscale on Windows
 
@@ -86,7 +86,7 @@ The subnet router lets any Tailscale node reach devices on your home LAN (192.16
 2. Go to **Applications > Tailscale**.
 3. Enable Tailscale.
 4. Use the device bind link to connect the router to your Tailscale account.
-5. **Enable "Allow Remote Access LAN" before binding.** The route advertisement is sent during the initial registration. If it was off when you first bound, you may need to disconnect and re-bind.
+5. **Enable "Allow Remote Access LAN" before binding.** The route advertisement is sent during the initial registration. If it was off when you first bound, you may need to disconnect and re-bind. Do not enable "Allow Remote Access WAN" unless you specifically need to reach devices on the WAN side of the router through Tailscale. For this setup, only LAN access is needed.
 
 ### Approve the Subnet Route
 
@@ -118,13 +118,19 @@ If "Allow Remote Access LAN" was enabled after the initial bind:
 
 Configuring the Flint 2 as a Tailscale exit node allows remote devices to route all internet traffic through your home network. This is useful when you are on an untrusted network and want the protection of your home router's NordVPN tunnel. See Mode 4 in the Everyday Use section below.
 
-1. In the GL.iNet admin panel, go to **Applications > Tailscale**.
-2. Enable the **Exit Node** toggle.
-3. In the Tailscale admin console, click your Flint 2 in the machine list.
-4. Click **Machine settings > Edit route settings**.
-5. Approve the exit node.
+**Note:** As of this writing, GL.iNet's firmware does not expose an exit node toggle in the admin panel UI. [GL.iNet's Tailscale documentation](https://docs.gl-inet.com/router/en/4/interface_guide/tailscale/) states that GL.iNet routers are not yet available as exit nodes through the GUI. To enable this, you must SSH into the router and run the following:
 
-To use it from a remote device, open the Tailscale app and select the Flint 2 as your exit node. All traffic will flow through your home router.
+```bash
+tailscale up --advertise-exit-node --advertise-routes=192.168.8.0/24
+```
+
+Then in the Tailscale admin console:
+
+1. Click your Flint 2 in the machine list.
+2. Click **Machine settings > Edit route settings**.
+3. Approve the exit node.
+
+You must include `--advertise-routes` again when running this command or the subnet route advertisement will be dropped. If you encounter issues, check the [GL.iNet forum thread on exit node configuration](https://forum.gl-inet.com/t/how-to-configure-gl-inet-router-to-host-tailscale-exit-node/65958) for community workarounds.
 
 ### Disable Key Expiry on the Router
 
@@ -133,7 +139,7 @@ Tailscale node keys expire after 180 days by default. If the router's key expire
 1. In the Tailscale admin console, click your Flint 2 in the machine list.
 2. Click **Machine settings > Disable key expiry**.
 
-Do this for any device that needs to stay connected permanently without manual re-authentication.
+Do this for any device that needs to stay connected permanently without manual re-authentication. Be aware of the trade-off: key expiry exists to limit the window of exposure if a node is compromised. With expiry disabled, a compromised router retains tailnet access indefinitely until you manually revoke it from the admin console.
 
 ---
 
@@ -189,6 +195,8 @@ Both services run simultaneously on the Flint 2 in Global Mode. Tailscale operat
 
 Default state: Router VPN always on (Global Mode). Tailscale always on.
 
+**A note on Tailscale ACLs:** The default access control policy on a Tailscale Personal plan is allow-all, meaning every device on your tailnet can reach every other device on every port. For a small household network this is generally acceptable, but if you add more users or devices over time, review the [Tailscale ACL documentation](https://tailscale.com/kb/1018/acls) and consider restricting access to only the services and devices each node actually needs to reach.
+
 Verified working behavior:
 
 - ipleak.net shows NordVPN IP, not ISP IP
@@ -238,7 +246,7 @@ Once everything is configured, your network operates in several distinct modes d
 
 **When to use it:** When you do not trust the local network and want the protection of your home router's NordVPN tunnel wrapping all your traffic.
 
-**How to enter this mode:** If you have configured the Flint 2 as a Tailscale exit node (Applications > Tailscale > enable Exit Node, then approve in admin console), open Tailscale on your device and select the Flint 2 as your exit node. All traffic now flows: your device > Tailscale tunnel > home router > NordVPN > internet.
+**How to enter this mode:** This requires the SSH-based exit node configuration described in the setup section above. Once configured, open Tailscale on your device and select the Flint 2 as your exit node. All traffic now flows: your device > Tailscale tunnel > home router > NordVPN > internet.
 
 **How to leave this mode:** In the Tailscale app, disable the exit node. Traffic returns to the local network.
 
