@@ -8,15 +8,42 @@
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
-      <a href="{{ '/about' | relative_url }}">About</a>
-    </nav>
-  </header>
-  <main>
-    {{ content }}
-  </main>
+  <div class="site-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h2>{{ site.title }}</h2>
+        <nav>
+          <a href="{{ '/' | relative_url }}">Home</a>
+          <a href="{{ '/about' | relative_url }}">About</a>
+          <a href="{{ '/tags' | relative_url }}">Tags</a>
+        </nav>
+      </div>
+      <div class="sidebar-section">
+        <h3>About</h3>
+        <p>{{ site.description }}</p>
+      </div>
+      <div class="sidebar-section">
+        <h3>Recent Posts</h3>
+        <ul class="sidebar-posts">
+          {% for post in site.posts limit:10 %}
+          <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <h3>Tags</h3>
+        <div class="tag-cloud">
+          {% assign sorted_tags = site.tags | sort %}
+          {% for tag in sorted_tags %}
+          <a href="{{ '/tags/' | relative_url }}#{{ tag[0] | slugify }}" class="tag">{{ tag[0] }} ({{ tag[1].size }})</a>
+          {% endfor %}
+        </div>
+      </div>
+    </aside>
+    <main>
+      {{ content }}
+    </main>
+  </div>
   <footer>
     <p>{{ site.author.name }} - {{ 'now' | date: "%Y" }}</p>
   </footer>
