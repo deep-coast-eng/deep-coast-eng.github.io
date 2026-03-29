@@ -213,6 +213,15 @@ No system is without trade-offs. This section covers what can go wrong with any 
 - **False sense of security.** Cameras deter and document, but they do not prevent. A camera recording someone stealing a package does not get the package back. Combine surveillance with physical security (locks, lighting, visible camera placement) for actual deterrence.
 - **Network dependency.** Cloud systems go down when the company has an outage or your internet drops. Local systems go down when your power or local network fails. Neither is immune. The difference is who controls the fix.
 
+### Environmental and Infrastructure Risks
+
+If you live in an area prone to wildfires, earthquakes, or frequent power outages, your surveillance system needs to account for these. This applies to cloud and local systems alike, but local systems require more deliberate planning since there is no offsite infrastructure handling it for you.
+
+- **Power outages.** A UPS (uninterruptible power supply) on the PoE switch, router, and Frigate server (Tier 2) keeps the system recording during short outages. A basic UPS rated for 30-60 minutes costs $50-100 and covers the most common outage scenarios. For longer outages, a UPS buys you time but will not keep cameras running indefinitely. If extended outages are common in your area, consider a generator or a solar battery backup (e.g., EcoFlow, Jackery) sized to keep the PoE switch and router alive. Note that the cameras themselves are powered by the PoE switch, so keeping the switch powered keeps all cameras operational.
+- **Wildfires and evacuation.** If you are in a wildfire-prone area, the physical hardware may be destroyed. The offsite backup options described in both tiers (Syncthing to a remote machine, or zero-knowledge cloud storage) become essential rather than optional. If your footage is only on local microSD cards or a local server and the house burns, the footage is gone. **Set up offsite backup before you need it, not after.** When evacuating, the system continues recording as long as it has power, and offsite backup ensures footage is preserved even if the hardware is lost.
+- **Earthquakes.** Mount cameras and the PoE switch securely. A camera that falls off the wall after a tremor is not recording the aftermath. Use earthquake putty or rated wall anchors for exterior mounts. Keep the NVR server or Raspberry Pi in a low, stable location rather than on a high shelf. Hard drives can survive moderate shaking but are more vulnerable than SSDs. If your Frigate server uses a spinning drive, consider an SSD for the events directory.
+- **Insurance documentation.** Regardless of the cause, continuous surveillance footage can be valuable for insurance claims after a disaster. Pre-event footage of your property's condition, combined with event footage during a fire or earthquake, provides documentation that insurers may accept. This is another reason to keep offsite backup running -- the footage has value beyond security.
+
 ### Ring vs. Nest vs. This Setup
 
 | Feature | Ring | Nest (Google) | This Setup (Tier 1) | This Setup (Tier 2) |
