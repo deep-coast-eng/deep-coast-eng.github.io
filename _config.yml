@@ -1,0 +1,24 @@
+# _config.yml
+# Place this at the root of your repo: deep-coast-eng.github.io/_config.yml
+
+# REQUIRED: Replace YOUR_USERNAME with your actual GitHub username
+title: "YOUR_USERNAME"
+description: "Technical notes and projects"
+url: "https://deep-coast-eng.github.io"
+baseurl: ""
+
+# Do not change these unless you know what you are doing
+markdown: kramdown
+highlighter: rouge
+permalink: /:year/:month/:day/:title/
+
+# Exclude files that GitHub does not need to process
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
+
+# Optional: add your name, links, etc.
+author:
+  name: "Deep Coast Engineering"
