@@ -149,7 +149,7 @@ Running NordVPN on the router protects all LAN traffic by default without instal
 
 1. In the VPN Client section, find the mode button (may be in the upper right).
 2. Set to **Global Mode** so all traffic routes through NordVPN.
-3. Do not use Policy Mode. It breaks DNS resolution on this firmware revision.
+3. Do not use Policy Mode. It has been known to break DNS resolution on some firmware revisions.
 
 ### Verify NordVPN is Working
 
