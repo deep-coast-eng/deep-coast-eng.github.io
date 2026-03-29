@@ -35,7 +35,7 @@ This guide was tested with the following, but the setup works with any combinati
 
 - 2x Windows PCs (Windows 10/11 Pro)
 - 1x Android phone (tested on Google Pixel 7a)
-- GL.iNet Flint 2 (GL-MT6000) router (firmware 4.x.x -- check [GL.iNet's download center](https://dl.gl-inet.com/router/mt6000) for the latest stable release). The admin panel at System > Upgrade will notify you when updates are available. Keep firmware current, but check the [GL.iNet forum](https://forum.gl-inet.com/) for a few days after a new release before updating -- stable releases have occasionally shipped with DNS or VPN regressions.
+- GL.iNet Flint 2 (GL-MT6000) router (firmware 4.x.x -- check [GL.iNet's download center](https://dl.gl-inet.com/router/mt6000) for the latest stable release). The admin panel at System > Upgrade will notify you when updates are available. Keep firmware current, but check the [GL.iNet forum](https://forum.gl-inet.com/) for a few days after a new release before updating -- stable releases have occasionally shipped with DNS or VPN regressions. **Do not apply firmware updates remotely.** A failed update can leave the router unreachable, and recovery requires physical access to the device.
 
 ---
 
@@ -131,6 +131,8 @@ Then in the Tailscale admin console:
 3. Approve the exit node.
 
 You must include `--advertise-routes` again when running this command or the subnet route advertisement will be dropped. If you encounter issues, check the [GL.iNet forum thread on exit node configuration](https://forum.gl-inet.com/t/how-to-configure-gl-inet-router-to-host-tailscale-exit-node/65958) for community workarounds.
+
+**Important:** GL.iNet's firmware manages the Tailscale service through its own internal script. Firmware updates or router reboots may overwrite the custom CLI flags set by the `tailscale up` command above, disabling the exit node without warning. The community-maintained [glinet-tailscale-updater](https://github.com/Admonstrator/glinet-tailscale-updater) script on GitHub can make these changes persistent and also keeps the Tailscale binary up to date. It is not affiliated with GL.iNet or Tailscale. If you do not use this script, check that the exit node is still advertised after any firmware update or reboot.
 
 ### Disable Key Expiry on the Router
 
@@ -297,3 +299,11 @@ Once everything is configured, your network operates in several distinct modes d
 - Router admin: `192.168.8.1`
 - Tailscale IPs: `100.x.y.z` (per device, found in admin console)
 - Tailscale admin: [https://login.tailscale.com/admin](https://login.tailscale.com/admin)
+
+### After a Firmware Update or Reboot
+
+1. Confirm NordVPN is connected in the GL.iNet admin panel under VPN > VPN Client.
+2. Confirm Tailscale is enabled under Applications > Tailscale.
+3. Verify the subnet route (`192.168.8.0/24`) is still approved in the Tailscale admin console under your Flint 2's route settings.
+4. If you configured the exit node via SSH, verify it is still advertised in the Tailscale admin console. If it is missing, re-run the `tailscale up` command from the exit node setup section, or use the [glinet-tailscale-updater](https://github.com/Admonstrator/glinet-tailscale-updater) script to make it persistent.
+5. Run the NordVPN verification: `nslookup myip.opendns.com resolver1.opendns.com` with VPN on, confirm the IP belongs to NordVPN.
