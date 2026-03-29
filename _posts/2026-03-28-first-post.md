@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "First post"
+title: "BTHAS [Bluetooth Hearing Aids Setup wizard]"
 date: 2026-03-28
 tags: [setup, jekyll]
 ---
