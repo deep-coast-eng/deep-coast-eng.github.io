@@ -2,7 +2,7 @@
 # Place this at the root of your repo: deep-coast-eng.github.io/_config.yml
 
 # REQUIRED: Replace YOUR_USERNAME with your actual GitHub username
-title: "YOUR_USERNAME"
+title: "Deep Coast Engineering"
 description: "Technical notes and projects"
 url: "https://deep-coast-eng.github.io"
 baseurl: ""
