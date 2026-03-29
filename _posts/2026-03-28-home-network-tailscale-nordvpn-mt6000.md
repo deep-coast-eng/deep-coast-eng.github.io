@@ -2,7 +2,7 @@
 layout: post
 title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet MT6000"
 date: 2026-03-28
-tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel-7a]
+tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel]
 ---
 
 Setting up a secure home network with remote access using a GL.iNet MT6000 router as the central hub, Tailscale (free plan) for encrypted remote access without port forwarding, and NordVPN on the router for always-on privacy.
