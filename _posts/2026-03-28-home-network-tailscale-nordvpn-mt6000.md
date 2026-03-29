@@ -1,17 +1,27 @@
 ---
 layout: post
-title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet MT6000"
+title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet Flint 2"
 date: 2026-03-28
 tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel]
 ---
 
-Setting up a secure home network with remote access using a GL.iNet MT6000 router as the central hub, Tailscale (free plan) for encrypted remote access without port forwarding, and NordVPN on the router for always-on privacy.
+Setting up a secure home network with remote access using a [GL.iNet Flint 2](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) router as the central hub, [Tailscale](https://tailscale.com/) (free plan) for encrypted remote access without port forwarding, and [NordVPN](https://nordvpn.com/) on the router for always-on privacy.
+
+## Why This Guide Exists
+
+Setting up a home network that respects your privacy shouldn't require an IT background or enterprise-grade hardware. Most consumer routers offer little beyond basic connectivity, and ISP-provided equipment is often locked down with no access to NAT, port forwarding, or advanced VPN features. For the modern general consumer who streams, works remotely, manages smart devices, and wants their internet activity private by default, there is no widely accepted, standardized playbook.
+
+This guide addresses that gap. It walks through building a privacy-first home network from scratch using affordable, consumer-accessible tools: the GL.iNet Flint 2 (GL-MT6000), NordVPN, and Tailscale. The Flint 2 ($159.99 at date of publishing) is an excellent fit for this setup. It runs OpenWrt-based firmware with native support for VPN clients and Tailscale, offers Wi-Fi 6 and 2.5G Ethernet, and provides an accessible admin interface that balances power with usability. NordVPN Basic covers always-on encrypted internet traffic and city-switchable streaming at an introductory price of $81.36 for 24 months. Tailscale provides secure remote access to your entire home network at no cost. The free plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
+
+All that is required for this setup are your existing devices (Windows or Linux PCs, Android phone), the free applications listed above, and the GL.iNet Flint 2 (GL-MT6000). No additional hardware, no paid subscriptions beyond NordVPN, and no modifications to your ISP modem. An intermediate user should expect to complete the full setup in approximately 1-2 hours, assuming their devices and tools match the conditions described in this guide.
+
+---
 
 ## Devices
 
 - 2x Windows PCs (Windows 10/11 Pro)
 - 1x Android phone (tested on Google Pixel 7a)
-- GL.iNet MT6000 router
+- GL.iNet Flint 2 (GL-MT6000) router
 
 ## Constraints
 
@@ -57,7 +67,7 @@ To rename the tailnet itself: Admin console > Settings > General > Tailnet name.
 
 ---
 
-## MT6000 as Tailscale Subnet Router
+## Flint 2 as Tailscale Subnet Router
 
 The subnet router lets any Tailscale node reach devices on your home LAN (192.168.8.x) without installing Tailscale on those devices. This is critical for IP cameras, PoE devices, and anything that cannot run Tailscale.
 
@@ -71,7 +81,7 @@ The subnet router lets any Tailscale node reach devices on your home LAN (192.16
 
 ### Approve the Subnet Route
 
-1. Go to the Tailscale admin console and click your MT6000 in the machine list.
+1. Go to the Tailscale admin console and click your Flint 2 in the machine list.
 2. Click **Machine settings > Edit route settings** (near the bottom of the dropdown).
 3. You should see `192.168.8.0/24` listed. Approve it.
 
@@ -91,13 +101,13 @@ If "Allow Remote Access LAN" was enabled after the initial bind:
 3. Navigate to `192.168.8.1` in a browser.
 4. If the router admin panel loads, subnet routing is working.
 5. If it times out or refuses to connect, check the following:
-   - Confirm the subnet route (`192.168.8.0/24`) is approved in the Tailscale admin console under your MT6000's route settings.
+   - Confirm the subnet route (`192.168.8.0/24`) is approved in the Tailscale admin console under your Flint 2's route settings.
    - Confirm Tailscale is enabled and connected on both the router and the phone.
    - Confirm the phone is actually on cellular, not WiFi. If it is on the same LAN, the test proves nothing.
 
 ---
 
-## NordVPN on the MT6000
+## NordVPN on the Flint 2
 
 Running NordVPN on the router protects all LAN traffic by default without installing the app on every device.
 
@@ -143,7 +153,7 @@ The router VPN stays on a local server for everyday use. When you need to appear
 
 ## Tailscale and NordVPN Coexistence
 
-Both services run simultaneously on the MT6000 in Global Mode. Tailscale operates at a different network layer and maintains connectivity for remote access while NordVPN handles all internet-bound traffic.
+Both services run simultaneously on the Flint 2 in Global Mode. Tailscale operates at a different network layer and maintains connectivity for remote access while NordVPN handles all internet-bound traffic.
 
 Default state: Router VPN always on (Global Mode). Tailscale always on.
 
@@ -162,7 +172,7 @@ Verified working behavior:
 
 When adding a PoE switch and camera to the LAN:
 
-- Connect the PoE switch to the MT6000.
+- Connect the PoE switch to the Flint 2.
 - The camera gets a LAN IP (e.g., 192.168.8.50).
 - With the subnet route approved in Tailscale, the camera is reachable from any Tailscale node remotely. No additional configuration needed.
 
