@@ -19,15 +19,11 @@ All that is required for this setup are your existing devices (Windows or Linux 
 
 ## Devices
 
+This guide was tested with the following, but the setup works with any combination of Windows, macOS, Linux, Android, and iOS devices:
+
 - 2x Windows PCs (Windows 10/11 Pro)
 - 1x Android phone (tested on Google Pixel 7a)
 - GL.iNet Flint 2 (GL-MT6000) router
-
-## Constraints
-
-- ISP modem is locked down (no NAT or port forwarding access), though this setup does not require either
-- Free Tailscale plan (up to 100 devices, 3 users)
-- Future additions: PoE switch and IP camera
 
 ---
 
