@@ -162,29 +162,6 @@ Verified working behavior:
 
 ---
 
-## Future Additions
-
-### PoE Switch and IP Camera
-
-When adding a PoE switch and camera to the LAN:
-
-- Connect the PoE switch to the Flint 2.
-- The camera gets a LAN IP (e.g., 192.168.8.50).
-- With the subnet route approved in Tailscale, the camera is reachable from any Tailscale node remotely. No additional configuration needed.
-
-### Linux Migration
-
-When migrating Windows machines to Linux:
-
-```bash
-curl -fsSL https://tailscale.com/install.sh | sh
-sudo tailscale up
-```
-
-Sign in with the same IDP account. NordVPN has a native Linux client as well.
-
----
-
 ## Quick Reference
 
 | Service | Role | Always On |
