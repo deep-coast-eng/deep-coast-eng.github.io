@@ -40,9 +40,11 @@
         </div>
       </div>
     </aside>
-    <main>
-      {{ content }}
-    </main>
+    <div class="main-wrapper">
+      <main>
+        {{ content }}
+      </main>
+    </div>
   </div>
   <footer>
     <p>{{ site.author.name }} - {{ 'now' | date: "%Y" }}</p>
