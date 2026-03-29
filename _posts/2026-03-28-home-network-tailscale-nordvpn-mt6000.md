@@ -2,7 +2,7 @@
 layout: post
 title: "Home Network Setup: Tailscale, NordVPN, and GL.iNet Flint 2"
 date: 2026-03-28
-tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel]
+tags: [networking, tailscale, nordvpn, gl-inet, mt6000, wireguard, google-pixel-7a]
 ---
 
 Setting up a secure home network with remote access using a [GL.iNet Flint 2](https://store-us.gl-inet.com/products/flint-2-gl-mt6000-wi-fi-6-high-performance-home-router) router as the central hub, [Tailscale](https://tailscale.com/) (free plan) for encrypted remote access without port forwarding, and [NordVPN](https://nordvpn.com/) on the router for always-on privacy.
@@ -14,6 +14,8 @@ Setting up a home network that respects your privacy shouldn't require an IT bac
 This guide addresses that gap. It walks through building a privacy-first home network from scratch using affordable, consumer-accessible tools: the GL.iNet Flint 2 (GL-MT6000), NordVPN, and Tailscale. The Flint 2 ($159.99 at date of publishing) is an excellent fit for this setup. It runs OpenWrt-based firmware with native support for VPN clients and Tailscale, offers Wi-Fi 6 and 2.5G Ethernet, and provides an accessible admin interface that balances power with usability. NordVPN Basic covers always-on encrypted internet traffic and city-switchable streaming at an introductory price of $81.36 for 24 months. Tailscale provides secure remote access to your entire home network at no cost. The free plan supports up to 100 devices and 3 users, which is more than sufficient for a typical household.
 
 All that is required for this setup are your existing devices (Windows or Linux PCs, Android phone), the free applications listed above, and the GL.iNet Flint 2 (GL-MT6000). No additional hardware, no paid subscriptions beyond NordVPN, and no modifications to your ISP modem. This setup also works with Apple devices -- Tailscale and NordVPN both have native iOS and macOS clients, and the process is effectively the same: install the app, sign in with your identity provider, and the device joins your network. An intermediate user should expect to complete the full setup in approximately 1-2 hours, assuming their devices and tools match the conditions described in this guide.
+
+**Disclaimer:** This guide documents a working home network configuration based on the author's own testing. It is not endorsed by or affiliated with Tailscale, NordVPN, or GL.iNet. Some aspects of this setup, particularly running Tailscale and a VPN client simultaneously on the router, fall outside the vendors' officially supported configurations. If you run into issues, please troubleshoot using this guide and community resources before contacting vendor support. Do not expect these companies to support a configuration their documentation does not recommend.
 
 ## Contents
 
@@ -143,7 +145,7 @@ Running NordVPN on the router protects all LAN traffic by default without instal
 
 1. In the GL.iNet admin panel, go to **VPN > VPN Client**.
 2. Add your NordVPN credentials or token.
-3. Select a nearby city server (e.g., San Francisco) for best speed and location-sensitive services like banking.
+3. Select a nearby city server (e.g., San Francisco) for best speed and location-sensitive services like banking. If the connection fails or speeds are significantly slower than expected, try a different server in the same city or a nearby city. NordVPN server performance varies and not every server will work equally well with the router's VPN client.
 
 ### Configure Global Mode
 
@@ -182,6 +184,8 @@ The router VPN stays on a local server for everyday use. When you need to appear
 ## Tailscale and NordVPN Coexistence
 
 Both services run simultaneously on the Flint 2 in Global Mode. Tailscale operates at a different network layer and maintains connectivity for remote access while NordVPN handles all internet-bound traffic.
+
+**A note on compatibility:** [GL.iNet's Tailscale documentation](https://docs.gl-inet.com/router/en/4/interface_guide/tailscale/) states that running Tailscale simultaneously with a WireGuard or OpenVPN client is not recommended due to potential routing conflicts. NordVPN on the router uses one of these protocols. This setup contradicts that guidance. In practice, it has worked reliably in the configuration described in this guide, but your results may vary depending on firmware version, NordVPN protocol selection, and server. If you encounter DNS issues or routing problems, this is the first thing to investigate.
 
 Default state: Router VPN always on (Global Mode). Tailscale always on.
 
