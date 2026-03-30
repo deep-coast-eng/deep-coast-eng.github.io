@@ -11,4 +11,4 @@ This site is where I publish the things I build outside of work. Most of what yo
 
 Everything I publish here is open source or freely available. I scope projects the same way professionally and personally: define the problem, identify who it's for, build the solution, and document it so someone else can maintain it without me. Sometimes the best way forward is to start with the outcome and work backward to where things are now. That's how most of these guides are structured, and it's how I approach problems at work. If a guide has trade-offs, I'll tell you what they are before you start. If a tool isn't the right fit for your situation, I'd rather you know that upfront than find out after you've spent money.
 
-I'm open to professional conversations, collaboration on open source projects, and feedback on anything published here. The best way to reach me is deep.coast.engineering@gmail.com.
+I'm open to professional conversations, collaboration on open source projects, and feedback on anything published here. The best way to reach me is at deep.coast.engineering@gmail.com.
